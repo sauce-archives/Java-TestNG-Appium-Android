@@ -57,7 +57,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
     public static Object[][] sauceBrowserDataProvider(Method testMethod) {
         return new Object[][]{
                 new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait", "1.4.11"},
-                new Object[]{"Android", "Samsung Galaxy S5 Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait", "1.4.11"},
+                new Object[]{"Android", "Google Nexus 7 HD Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait", "1.4.11"},
         };
     }
 
