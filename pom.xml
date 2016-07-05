@@ -26,7 +26,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>2.45.0</version>
+            <version>2.53.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -71,7 +71,7 @@
                 <configuration>
                 	<parallel>methods</parallel>
           			<threadCount>20</threadCount>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
                 </configuration>
             </plugin>
         </plugins>

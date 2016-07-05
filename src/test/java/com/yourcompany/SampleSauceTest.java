@@ -14,6 +14,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
 import java.lang.reflect.Method;
@@ -30,7 +31,6 @@ import java.util.List;
 
 @Listeners({SauceOnDemandTestListener.class})
 public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnDemandAuthenticationProvider {
-
     /**
      * Constructs a {@link com.saucelabs.common.SauceOnDemandAuthentication} instance using the supplied user name/access key.  To use the authentication
      * supplied by environment variables or from an external file, use the no-arg {@link com.saucelabs.common.SauceOnDemandAuthentication} constructor.
@@ -56,8 +56,8 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
     @DataProvider(name = "hardCodedBrowsers", parallel = true)
     public static Object[][] sauceBrowserDataProvider(Method testMethod) {
         return new Object[][]{
-                new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait", "1.4.11"},
-                new Object[]{"Android", "Google Nexus 7 HD Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait", "1.4.11"},
+                new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait"},
+                new Object[]{"Android", "Google Nexus 7 HD Emulator", "4.4", "http://saucelabs.com/example_files/ContactManager.apk", "", "portrait"},
         };
     }
 
@@ -74,9 +74,9 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
      * @return
      * @throws MalformedURLException if an error occurs parsing the url
      */
-    private WebDriver createDriver(String platformName, String deviceName, String platformVersion, String app, String browserName, String deviceOrientation, String appiumVersion, String methodName) throws MalformedURLException {
+    private WebDriver createDriver(String platformName, String deviceName, String platformVersion, String app, String browserName, String deviceOrientation, String methodName) throws MalformedURLException {
 
-    	DesiredCapabilities capabilities = new DesiredCapabilities();
+        DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability("platformName", platformName);
         capabilities.setCapability("deviceName", deviceName);
@@ -84,7 +84,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
         capabilities.setCapability("app", app);
         capabilities.setCapability("browserName", browserName);
         capabilities.setCapability("deviceOrientation", deviceOrientation);
-        capabilities.setCapability("appiumVersion", appiumVersion);
+        capabilities.setCapability("appiumVersion", "1.5.3");
 
         String jobName = methodName + '_' + deviceName + '_' + platformName + '_' + platformVersion;
         capabilities.setCapability("name", jobName);
@@ -107,16 +107,16 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
      * @throws Exception if an error occurs during the running of the test
      */
     @Test(dataProvider = "hardCodedBrowsers")
-    public void addContactTest(String platformName, String deviceName, String platformVersion, String app, String browserName, String deviceOrientation, String appiumVersion, Method method) throws Exception {
-    	WebDriver driver = createDriver(platformName, deviceName, platformVersion, app, browserName, deviceOrientation, appiumVersion, method.getName());
-    	
-    	WebElement addContactButton = driver.findElement(By.name("Add Contact"));
-    	addContactButton.click();
-    
-    	List<WebElement> textFieldsList = driver.findElements(By.className("android.widget.EditText"));
-    	textFieldsList.get(0).sendKeys("Some Name");
-    	textFieldsList.get(2).sendKeys("Some@example.com");
-    	driver.findElement(By.name("Save")).click();
+    public void addContactTest(String platformName, String deviceName, String platformVersion, String app, String browserName, String deviceOrientation, Method method) throws Exception {
+        WebDriver driver = createDriver(platformName, deviceName, platformVersion, app, browserName, deviceOrientation, method.getName());
+        
+        WebElement button = driver.findElement(By.className("android.widget.Button"));
+        button.click();
+        List<WebElement> textFieldsList = driver.findElements(By.className("android.widget.EditText"));
+        textFieldsList.get(0).sendKeys("Some Name");
+        textFieldsList.get(2).sendKeys("Some@example.com");
+        button.click();
+        
         driver.quit();
     }
 
@@ -145,4 +145,3 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
         return authentication;
     }
 }
-
