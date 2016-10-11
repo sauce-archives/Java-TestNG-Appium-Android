@@ -90,7 +90,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
         capabilities.setCapability("name", jobName);
 
         webDriver.set(new AndroidDriver<WebElement>(
-                new URL("http://" + authentication.getUsername() + ":" + authentication.getAccessKey() + "@ondemand.saucelabs.com:80/wd/hub"),
+                new URL("https://" + authentication.getUsername() + ":" + authentication.getAccessKey() + "@ondemand.saucelabs.com:443/wd/hub"),
                 capabilities));
         String id = ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
         sessionId.set(id);
@@ -109,14 +109,14 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider, SauceOnD
     @Test(dataProvider = "hardCodedBrowsers")
     public void addContactTest(String platformName, String deviceName, String platformVersion, String app, String browserName, String deviceOrientation, Method method) throws Exception {
         WebDriver driver = createDriver(platformName, deviceName, platformVersion, app, browserName, deviceOrientation, method.getName());
-        
+
         WebElement button = driver.findElement(By.className("android.widget.Button"));
         button.click();
         List<WebElement> textFieldsList = driver.findElements(By.className("android.widget.EditText"));
         textFieldsList.get(0).sendKeys("Some Name");
         textFieldsList.get(2).sendKeys("Some@example.com");
         button.click();
-        
+
         driver.quit();
     }
 
