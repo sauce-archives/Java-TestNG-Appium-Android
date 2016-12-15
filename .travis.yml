@@ -1,0 +1,12 @@
+language: java
+jdk:
+- oraclejdk8
+before_install:
+- export | grep SAUCE_
+env:
+  global:
+  - BUILD_TAG=$TRAVIS_REPO_SLUG+$TRAVIS_BUILD_NUMBER
+  - SAUCE_USERNAME=sauce_examples
+addons:
+  jwt:
+    secure: bJ0ZDz8olROzRTfW6svd2dqKn2ds4s8mZVyLpCvPTA8iFMEGRkuIgiaOzaMr7Nkhte98DY/AbMHZ1Po/cfzmfOqhYpHvmREZiJ4ScaSU/nkTrRelNQCO4CiuDoNRfjffQzZYU22vR96ViQoE6GA3b9U1XtlJI8BNGeeOl82eA08QufEBXI3HEWAcG5dC5LAa0T84Rx0p4pPvI0zuX9xbQ0MvTJTwj+NC0WDIJbHUJdBrHbA98KBypI3yzC24UNqjwkZkMxfVofm6ZT9a3u5oBByzrUMVjOm7NaobL+yiSOi5IHoSev9xlHbtMUc75H0C80Oe9/AHI8jXr5RJJJ2ga10jsjZciMAMWGtnSdXZjbfokrdDQiS10ETxpyv38OYPMwmTMCCkxhajmr1dv9/aeSLA2VOId/lEIeytRthNK/PGxiMreA4EhDzlJRYvjD1xToYxGSnHKwNDSujOPXLk/d4fCaXwDlYmAFzrGzvAf6HF0JJdD0U8wZhHfVWn1vJxKw79K9xJzwBicdgbazLI8cfMI/Ig+APKYOaEAlxlpbkUvH3K/5enuZJTnmwNHmi2F9v3/MuJcAKxKsXRDb3O5ue/VzeQWDS0fIzpokysJL95FhHBMUmcxlycSv1E41dVDXkt/IdxyF+NK7XOtnhKSxdUGJgSZAtM3xkDT5fcmNw=
