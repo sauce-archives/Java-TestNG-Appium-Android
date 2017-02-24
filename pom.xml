@@ -58,6 +58,12 @@
             <version>2.1.23</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.testobject</groupId>
+            <artifactId>testobject-appium-java-api</artifactId>
+            <version>0.0.26</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -78,6 +84,7 @@
                     <parallel>methods</parallel>
                     <threadCount>20</threadCount>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
                 </configuration>
             </plugin>
         </plugins>
