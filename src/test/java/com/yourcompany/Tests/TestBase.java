@@ -18,6 +18,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.UnexpectedException;
 
+import org.testobject.appium.TestObjectListenerProvider;
+import org.testobject.appium.testng.TestObjectTestNGTestResultWatcher;
+import org.testobject.appium.testng.TestObjectWatcherProvider;
+
+
 // import testng annotations
 // import java libraries
 
@@ -27,12 +32,20 @@ import java.rmi.UnexpectedException;
  * @author Neil Manvar
  */
 @Listeners({SauceOnDemandTestListener.class})
-public class TestBase implements SauceOnDemandSessionIdProvider, SauceOnDemandAuthenticationProvider {
+public class TestBase implements SauceOnDemandSessionIdProvider, SauceOnDemandAuthenticationProvider, TestObjectWatcherProvider {
 
-    public String seleniumURI = "@ondemand.saucelabs.com:443";
+    public String sauceSeleniumURI = "@ondemand.saucelabs.com:443";
     public String buildTag = System.getenv("BUILD_TAG");
     public String username = System.getenv("SAUCE_USERNAME");
     public String accesskey = System.getenv("SAUCE_ACCESS_KEY");
+    public String testobjectAccessKey = System.getenv("TO_ACCESS_KEY");
+
+    private TestObjectListenerProvider provider = TestObjectListenerProvider.newInstance();
+
+    @Override
+    public TestObjectListenerProvider getProvider() {
+        return provider;
+    }
 
     /**
      * Constructs a {@link SauceOnDemandAuthentication} instance using the supplied user name/access key.  To use the authentication
@@ -60,7 +73,8 @@ public class TestBase implements SauceOnDemandSessionIdProvider, SauceOnDemandAu
     public static Object[][] sauceBrowserDataProvider(Method testMethod) {
         return new Object[][]{
                 new Object[]{"Android", "Android Emulator", "5.0", "1.5.3", "portrait"},
-                new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "1.5.3", "portrait"}
+                new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "1.5.3", "portrait"},
+                new Object[]{"Test Object", "Samsung_Galaxy_S5_real", "", "1.6.3", ""}
         };
     }
 
@@ -108,26 +122,38 @@ public class TestBase implements SauceOnDemandSessionIdProvider, SauceOnDemandAu
             String methodName)
             throws MalformedURLException, UnexpectedException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
+        String gridEndpoint;
 
-        capabilities.setCapability("platformName", platformName);
-        capabilities.setCapability("platformVersion", platformVersion);
-        capabilities.setCapability("deviceName", deviceName);
-        capabilities.setCapability("deviceOrientation", deviceOrientation);
-        capabilities.setCapability("appiumVersion", appiumVersion);
-        capabilities.setCapability("name", methodName);
+        if (platformName.equals("Test Object")) {
+            capabilities.setCapability("testobject_device", deviceName);
+            capabilities.setCapability("testobject_api_key", testobjectAccessKey);
+            capabilities.setCapability("testobject_appium_version", appiumVersion);
+            capabilities.setCapability("testobject_test_name", methodName);
 
-        String app = "https://github.com/saucelabs-sample-test-frameworks/GuineaPig-Sample-App/blob/master/android/GuineaPigApp-debug.apk?raw=true";
+            gridEndpoint = "https://appium.testobject.com:443/wd/hub";
+        } else { // running on Sauce
+            capabilities.setCapability("platformName", platformName);
+            capabilities.setCapability("platformVersion", platformVersion);
+            capabilities.setCapability("deviceName", deviceName);
+            capabilities.setCapability("deviceOrientation", deviceOrientation);
+            capabilities.setCapability("appiumVersion", appiumVersion);
+            capabilities.setCapability("name", methodName);
 
-        capabilities.setCapability("app", app);
+            if (buildTag != null) {
+                capabilities.setCapability("build", buildTag);
+            }
+            String app = "https://github.com/saucelabs-sample-test-frameworks/GuineaPig-Sample-App/blob/master/android/GuineaPigApp-debug.apk?raw=true";
+            capabilities.setCapability("app", app);
 
-        if (buildTag != null) {
-            capabilities.setCapability("build", buildTag);
+            gridEndpoint = "https://" + authentication.getUsername() + ":" + authentication.getAccessKey() + sauceSeleniumURI + "/wd/hub";
         }
 
+        AndroidDriver driver =  new AndroidDriver(
+                new URL(gridEndpoint),
+                capabilities);
+
         // Launch remote browser and set it as the current thread
-        androidDriver.set(new AndroidDriver(
-                new URL("https://" + authentication.getUsername() + ":" + authentication.getAccessKey() + seleniumURI + "/wd/hub"),
-                capabilities));
+        androidDriver.set(driver);
 
         String id = ((RemoteWebDriver) getAndroidDriver()).getSessionId().toString();
         sessionId.set(id);

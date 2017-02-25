@@ -57,6 +57,11 @@
             <artifactId>sauce_testng</artifactId>
             <version>2.1.23</version>
         </dependency>
+        <dependency>
+            <groupId>org.testobject</groupId>
+            <artifactId>testobject-appium-java-api</artifactId>
+            <version>0.0.26</version>
+        </dependency>
 
     </dependencies>
 
