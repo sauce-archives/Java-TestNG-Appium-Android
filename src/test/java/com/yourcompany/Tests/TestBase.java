@@ -59,8 +59,8 @@ public class TestBase implements SauceOnDemandSessionIdProvider, SauceOnDemandAu
     @DataProvider(name = "hardCodedBrowsers", parallel = true)
     public static Object[][] sauceBrowserDataProvider(Method testMethod) {
         return new Object[][]{
-                new Object[]{"Android", "Android Emulator", "5.0", "1.5.3", "portrait"},
-                new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "1.5.3", "portrait"}
+                new Object[]{"Android", "Android Emulator", "5.0", "1.9.1", "portrait"},
+                new Object[]{"Android", "Samsung Galaxy S4 Emulator", "4.4", "1.9.1", "portrait"}
         };
     }
 
